@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#8a6a57" />
-  <title>planner-fixed</title>
+  <title>Мой планировщик</title>
   <link rel="preconnect" href="https://api.fontshare.com">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -69,6 +69,7 @@
     }
     textarea { resize: vertical; min-height: 100px; }
     .hidden { display: none !important; }
+
     .app {
       width: min(100%, 980px);
       margin: 0 auto;
@@ -103,12 +104,19 @@
       background: var(--color-surface-2);
       display: grid; place-items: center;
     }
+
     .page {
       padding: 0 18px 118px;
       display: grid;
       gap: 16px;
       grid-template-columns: 1fr;
     }
+    .page[data-desktop-grid="today"] {
+      grid-template-columns: 1.2fr .8fr;
+      align-items: start;
+    }
+    .page[data-desktop-grid="today"] .hero { grid-column: 1 / -1; }
+
     .card {
       border: 1px solid var(--color-border);
       background: var(--color-surface);
@@ -125,12 +133,14 @@
     }
     h2 { margin: 14px 0 6px; font-size: 28px; line-height: 1.1; }
     .muted { color: var(--color-text-muted); }
+
     .section-head {
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
       margin-bottom: 12px;
     }
     .section-head h3 { margin: 0; font-size: 19px; }
     .section-link { color: var(--color-primary); font-size: 14px; font-weight: 700; }
+
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
     .stat {
       padding: 12px; border-radius: 16px; border: 1px solid var(--color-border);
@@ -138,6 +148,7 @@
     }
     .stat strong { display:block; font-size: 19px; }
     .stat span { font-size: 12px; color: var(--color-text-muted); }
+
     .list { display: grid; gap: 10px; }
     .task {
       display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start;
@@ -160,6 +171,7 @@
     }
     .chip.primary { background: var(--color-primary-soft); color: var(--color-primary); border-color: transparent; }
     .task-meta { text-align: right; display: grid; gap: 8px; }
+
     .mini-btn {
       padding: 8px 10px; border-radius: 12px; border: 1px solid var(--color-border);
       background: var(--color-surface-2); font-size: 12px;
@@ -168,6 +180,7 @@
     .pill-btn { background: var(--color-surface-2); border: 1px solid var(--color-border); }
     .primary-btn { background: var(--color-primary); color: #fff; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
     .project-row, .archive-row, .deadline-row {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
       padding: 12px 0; border-bottom: 1px solid var(--color-border);
@@ -175,22 +188,27 @@
     .project-row:last-child, .archive-row:last-child, .deadline-row:last-child { border-bottom: 0; padding-bottom: 0; }
     .folder-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
     .folder { padding: 10px 12px; border-radius: 14px; background: var(--color-surface-2); border: 1px solid var(--color-border); font-size: 14px; }
+
     .searchbox {
       display:flex; align-items:center; gap:10px; padding:14px; border-radius:18px;
       border:1px solid var(--color-border); background: var(--color-surface-2);
     }
+
     .fab {
       position: fixed; right: max(18px, calc((100vw - min(100vw, 980px)) / 2 + 18px));
       bottom: 92px; width: 58px; height: 58px; border-radius: 20px; background: var(--color-primary);
       color: white; display: grid; place-items: center; box-shadow: var(--shadow-md); z-index: 8;
     }
+
     .bottom-nav {
       position: fixed; left: 50%; transform: translateX(-50%); bottom: 0;
       width: min(980px, 100vw); padding: 12px 14px 18px;
       background: linear-gradient(180deg, rgba(248,242,234,0) 0%, var(--color-bg) 20%, var(--color-bg) 100%);
       z-index: 7;
     }
-    [data-theme="dark"] .bottom-nav { background: linear-gradient(180deg, rgba(33,25,21,0) 0%, var(--color-bg) 20%, var(--color-bg) 100%); }
+    [data-theme="dark"] .bottom-nav {
+      background: linear-gradient(180deg, rgba(33,25,21,0) 0%, var(--color-bg) 20%, var(--color-bg) 100%);
+    }
     .nav-rail {
       display:grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap:8px; padding:8px;
       border-radius: 22px; border:1px solid var(--color-border); background: color-mix(in srgb, var(--color-surface) 92%, transparent);
@@ -201,6 +219,7 @@
       border-radius:18px; color: var(--color-text-muted); font-size: 11px; line-height: 1.05; font-weight:700; padding:4px 2px; text-align:center;
     }
     .nav-item.active { background: var(--color-primary-soft); color: var(--color-primary); }
+
     .sheet, .auth-screen {
       position: fixed; inset: 0; background: rgba(22,16,13,.28); backdrop-filter: blur(8px); z-index: 20;
       display: none; align-items: end; justify-content: center;
@@ -212,15 +231,22 @@
     }
     .auth-screen { align-items:center; }
     .auth-card { border-radius: 28px; max-width: 390px; }
+
     .form-group { display:grid; gap:6px; margin-bottom: 12px; }
     .form-group label { font-size: 12px; text-transform: uppercase; letter-spacing:.04em; color: var(--color-text-muted); font-weight:700; }
     .helper { font-size: 12px; color: var(--color-text-muted); }
-    .notice { padding: 12px; border-radius: 16px; background: var(--color-primary-soft); color: var(--color-primary); font-size: 14px; margin-bottom: 12px; }
+    .notice {
+      padding: 12px; border-radius: 16px; background: var(--color-primary-soft); color: var(--color-primary); font-size: 14px; margin-bottom: 12px;
+    }
     .error { background: var(--color-danger-soft); color: #8f5f52; }
     .empty { padding: 22px 12px; text-align:center; color: var(--color-text-muted); }
-    .calendar-weekdays, .calendar-grid { display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:8px; }
+
+    .calendar-weekdays, .calendar-grid {
+      display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:8px;
+    }
     .calendar-weekdays { margin-bottom:8px; }
     .weekday { text-align:center; font-size:12px; color:var(--color-text-muted); font-weight:700; text-transform:lowercase; }
+
     .day-cell {
       min-height:72px; border-radius:18px; border:1px solid var(--color-border); background:var(--color-surface-2);
       padding:8px; display:flex; flex-direction:column; gap:6px; align-items:flex-start; justify-content:flex-start;
@@ -232,12 +258,11 @@
     .day-dots { display:flex; flex-wrap:wrap; gap:4px; }
     .day-dot { width:7px; height:7px; border-radius:999px; background:var(--color-primary); }
     .day-count { margin-top:auto; font-size:11px; color:var(--color-text-muted); }
+
     .install-note { font-size: 12px; color: var(--color-text-muted); margin-top: 8px; }
-    @media (min-width: 760px) {
-      .page[data-desktop-grid="today"] { grid-template-columns: 1.2fr .8fr; align-items: start; }
-      .page[data-desktop-grid="today"] .hero { grid-column: 1 / -1; }
-    }
+
     @media (max-width: 640px) {
+      .page[data-desktop-grid="today"] { grid-template-columns: 1fr; }
       .stats, .grid-2 { grid-template-columns: 1fr; }
       .task { grid-template-columns: auto 1fr; }
       .task-meta { grid-column: 2; text-align: left; }
@@ -414,23 +439,23 @@
     const SUPABASE_KEY = 'sb_publishable_cSP87ewnVdv3bNpltq1I2Q_ivkm7O8y';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const today = new Date();
-const toLocalISODate = (d) => {
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+    const today = new Date();
+    const toLocalISODate = (d) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
 
-const state = {
-  session: null,
-  user: null,
-  tasks: [],
-  projects: [],
-  view: 'today',
-  calendarDate: today,
-  selectedCalendarDate: toLocalISODate(today)
-};
+    const state = {
+      session: null,
+      user: null,
+      tasks: [],
+      projects: [],
+      view: 'today',
+      calendarDate: today,
+      selectedCalendarDate: toLocalISODate(today)
+    };
 
     const authScreen = document.getElementById('authScreen');
     const authNotice = document.getElementById('authNotice');
@@ -444,13 +469,15 @@ const state = {
     const todayLabel = document.getElementById('todayLabel');
 
     const formatDate = (dateStr) => {
-  if (!dateStr) return 'без даты';
-  const [year, month, day] = dateStr.split('-').map(Number);
-  if (!year || !month || !day) return dateStr;
-  const d = new Date(year, month - 1, day); 
-  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-};
-    todayLabel.textContent = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (!dateStr) return 'без даты';
+      const [year, month, day] = dateStr.split('-').map(Number);
+      if (!year || !month || !day) return dateStr;
+      const d = new Date(year, month - 1, day);
+      return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    };
+    todayLabel.textContent = new Date().toLocaleDateString('ru-RU', {
+      weekday: 'long', day: 'numeric', month: 'long'
+    });
 
     function showNotice(el, text, isError = false) {
       el.textContent = text;
@@ -463,7 +490,7 @@ const state = {
       el.classList.remove('error');
     }
     function escapeHtml(str = '') {
-      return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+      return String(str).replace(/[&<>\"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
     }
 
     async function signUp() {
@@ -500,7 +527,10 @@ const state = {
     }
 
     async function fetchProjects() {
-      const { data, error } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: true });
+      const { data, error } = await supabaseClient
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: true });
       if (error) throw error;
       state.projects = data || [];
       if (!state.projects.find(p => p.is_inbox)) {
@@ -511,14 +541,20 @@ const state = {
           sections: []
         });
         if (insertError && !String(insertError.message).toLowerCase().includes('duplicate')) throw insertError;
-        const { data: retry, error: retryError } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: true });
+        const { data: retry, error: retryError } = await supabaseClient
+          .from('projects')
+          .select('*')
+          .order('created_at', { ascending: true });
         if (retryError) throw retryError;
         state.projects = retry || [];
       }
     }
 
     async function fetchTasks() {
-      const { data, error } = await supabaseClient.from('tasks').select('*').order('created_at', { ascending: false });
+      const { data, error } = await supabaseClient
+        .from('tasks')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (error) throw error;
       state.tasks = data || [];
     }
@@ -551,24 +587,38 @@ const state = {
     }
 
     function renderToday() {
-      const todayIso = new Date().toISOString().slice(0, 10);
+      const todayIso = toLocalISODate(new Date());
       const todayTasks = state.tasks.filter(t => !t.completed && t.planned_date === todayIso);
       const upcoming = state.tasks.filter(t => {
         if (t.completed || !t.deadline) return false;
-        const diff = Math.ceil((new Date(t.deadline + 'T00:00:00') - new Date(todayIso + 'T00:00:00')) / 86400000);
+        const diff = Math.ceil(
+          (new Date(t.deadline + 'T00:00:00') - new Date(todayIso + 'T00:00:00')) / 86400000
+        );
         return diff >= 0 && diff <= 5;
       }).sort((a,b) => a.deadline.localeCompare(b.deadline));
 
       document.getElementById('statToday').textContent = todayTasks.length;
       document.getElementById('statUpcoming').textContent = upcoming.length;
-      document.getElementById('statInbox').textContent = state.tasks.filter(t => !t.completed && t.project_id === getInboxProject()?.id).length;
+      document.getElementById('statInbox').textContent =
+        state.tasks.filter(t => !t.completed && t.project_id === getInboxProject()?.id).length;
 
-      document.getElementById('todayTasks').innerHTML = todayTasks.length ? todayTasks.map(taskCard).join('') : '<div class="empty">На сегодня пока пусто. Можно спокойно добавить первую задачу.</div>';
-      document.getElementById('upcomingDeadlines').innerHTML = upcoming.length ? upcoming.map(t => `
-        <div class="deadline-row">
-          <div><strong>${escapeHtml(t.title)}</strong><div class="muted" style="font-size:12px;">${escapeHtml(getProjectName(t.project_id))}</div></div>
-          <div class="chip">${formatDate(t.deadline)}</div>
-        </div>`).join('') : '<div class="empty">На ближайшие 5 дней дедлайнов нет.</div>';
+      document.getElementById('todayTasks').innerHTML =
+        todayTasks.length
+          ? todayTasks.map(taskCard).join('')
+          : '<div class="empty">На сегодня пока пусто. Можно спокойно добавить первую задачу.</div>';
+
+      document.getElementById('upcomingDeadlines').innerHTML =
+        upcoming.length
+          ? upcoming.map(t => `
+              <div class="deadline-row">
+                <div>
+                  <strong>${escapeHtml(t.title)}</strong>
+                  <div class="muted" style="font-size:12px;">${escapeHtml(getProjectName(t.project_id))}</div>
+                </div>
+                <div class="chip">${formatDate(t.deadline)}</div>
+              </div>`).join('')
+          : '<div class="empty">На ближайшие 5 дней дедлайнов нет.</div>';
+
       bindTaskActions();
     }
 
@@ -580,9 +630,14 @@ const state = {
         return `
           <div class="card" style="padding:14px; margin-bottom:12px; background:var(--color-surface-2);">
             <div class="project-row" style="padding-top:0;">
-              <div><strong>${escapeHtml(project.name)}</strong><div class="muted" style="font-size:13px;">${projectTasks.length} активных задач</div></div>
+              <div>
+                <strong>${escapeHtml(project.name)}</strong>
+                <div class="muted" style="font-size:13px;">${projectTasks.length} активных задач</div>
+              </div>
             </div>
-            ${sections.length ? `<div class="folder-wrap">${sections.map(s => `<span class="folder">${escapeHtml(s)}</span>`).join('')}</div>` : ''}
+            ${sections.length
+              ? `<div class="folder-wrap">${sections.map(s => `<span class="folder">${escapeHtml(s)}</span>`).join('')}</div>`
+              : ''}
             <div style="margin-top:12px;" class="list">
               ${projectTasks.slice(0,4).map(taskCard).join('') || '<div class="empty">Пока пусто.</div>'}
             </div>
@@ -596,30 +651,31 @@ const state = {
       const base = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1);
       const year = base.getFullYear();
       const month = base.getMonth();
-      document.getElementById('calendarMonth').textContent = base.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+      document.getElementById('calendarMonth').textContent =
+        base.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
 
       const weekdays = ['пн','вт','ср','чт','пт','сб','вс'];
       const firstDay = new Date(year, month, 1);
-const startOffset = (firstDay.getDay() + 6) % 7;
-const gridStart = new Date(year, month, 1 - startOffset);
+      const startOffset = (firstDay.getDay() + 6) % 7;
+      const gridStart = new Date(year, month, 1 - startOffset);
 
-const todayIso = toLocalISODate(new Date());
-const selectedIso = state.selectedCalendarDate || todayIso;
-const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
+      const todayIso = toLocalISODate(new Date());
+      const selectedIso = state.selectedCalendarDate || todayIso;
+      const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
 
-let cells = '';
-for (let i = 0; i < 42; i++) {
-  const d = new Date(gridStart);
-  d.setDate(gridStart.getDate() + i);
-  const iso = d.toISOString().slice(0,10);
-  const tasksForDay = monthTasks.filter(t => t.planned_date === iso);
-  const outside = d.getMonth() !== month;
-  const isToday = iso === todayIso;
-  const isSelected = iso === selectedIso;
-  ...
-}
+      let cells = '';
+      for (let i = 0; i < 42; i++) {
+        const d = new Date(gridStart);
+        d.setDate(gridStart.getDate() + i);
+        const iso = toLocalISODate(d);
+        const tasksForDay = monthTasks.filter(t => t.planned_date === iso);
+        const outside = d.getMonth() !== month;
+        const isToday = iso === todayIso;
+        const isSelected = iso === selectedIso;
         cells += `
-          <button type="button" class="day-cell ${outside ? 'outside' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" data-date="${iso}">
+          <button type="button"
+            class="day-cell ${outside ? 'outside' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}"
+            data-date="${iso}">
             <span class="day-num">${d.getDate()}</span>
             <div class="day-dots">${tasksForDay.slice(0,4).map(() => '<span class="day-dot"></span>').join('')}</div>
             <span class="day-count">${tasksForDay.length ? tasksForDay.length + ' задач' : ''}</span>
@@ -627,7 +683,9 @@ for (let i = 0; i < 42; i++) {
       }
 
       document.getElementById('calendarGridWrap').innerHTML = `
-        <div class="calendar-weekdays">${weekdays.map(d => `<div class="weekday">${d}</div>`).join('')}</div>
+        <div class="calendar-weekdays">
+          ${weekdays.map(d => `<div class="weekday">${d}</div>`).join('')}
+        </div>
         <div class="calendar-grid">${cells}</div>`;
 
       const selectedTasks = monthTasks
@@ -636,18 +694,24 @@ for (let i = 0; i < 42; i++) {
 
       document.getElementById('calendarTasks').innerHTML = `
         <div class="section-head" style="margin-top:4px; margin-bottom:10px;">
-          <h3 style="font-size:17px;">${new Date(selectedIso + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}</h3>
+          <h3 style="font-size:17px;">
+            ${new Date(selectedIso + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}
+          </h3>
           <button type="button" class="mini-btn" id="addTaskForSelectedDayBtn">Добавить</button>
         </div>
-        ${selectedTasks.length ? selectedTasks.map(t => `
-          <div class="task ${t.completed ? 'done' : ''}" data-id="${t.id}">
-            <button type="button" class="check toggle-task" aria-label="Отметить выполненной"></button>
-            <div>
-              <h4>${escapeHtml(t.title)}</h4>
-              <p>${t.planned_time ? t.planned_time : 'весь день'} · ${escapeHtml(getProjectName(t.project_id))}${t.section ? ' · ' + escapeHtml(t.section) : ''}</p>
-            </div>
-            <div class="task-meta">${t.deadline ? `<div class="chip">Дедлайн ${formatDate(t.deadline)}</div>` : ''}</div>
-          </div>`).join('') : '<div class="empty">На этот день задач нет.</div>'}`;
+        ${selectedTasks.length
+          ? selectedTasks.map(t => `
+              <div class="task ${t.completed ? 'done' : ''}" data-id="${t.id}">
+                <button type="button" class="check toggle-task" aria-label="Отметить выполненной"></button>
+                <div>
+                  <h4>${escapeHtml(t.title)}</h4>
+                  <p>${t.planned_time ? t.planned_time : 'весь день'} · ${escapeHtml(getProjectName(t.project_id))}${t.section ? ' · ' + escapeHtml(t.section) : ''}</p>
+                </div>
+                <div class="task-meta">
+                  ${t.deadline ? `<div class="chip">Дедлайн ${formatDate(t.deadline)}</div>` : ''}
+                </div>
+              </div>`).join('')
+          : '<div class="empty">На этот день задач нет.</div>'}`;
 
       document.querySelectorAll('.day-cell').forEach(btn => {
         btn.onclick = () => {
@@ -663,16 +727,26 @@ for (let i = 0; i < 42; i++) {
 
     function renderSearch() {
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const results = !q ? [] : state.tasks.filter(t => (t.title + ' ' + (t.note || '')).toLowerCase().includes(q));
-      document.getElementById('searchResults').innerHTML = q ? (results.length ? results.map(r => `
-        <div class="card" style="padding:12px; margin-top:10px;">
-          <strong>${escapeHtml(r.title)}</strong>
-          <div class="muted" style="font-size:14px; margin-top:4px;">${escapeHtml(getProjectName(r.project_id))}${r.note ? ' · есть заметка' : ''}</div>
-        </div>`).join('') : '<div class="empty">Ничего не найдено.</div>') : '<div class="empty">Начни вводить слово из названия или заметки.</div>';
+      const results = !q ? [] : state.tasks.filter(
+        t => (t.title + ' ' + (t.note || '')).toLowerCase().includes(q)
+      );
+      document.getElementById('searchResults').innerHTML = q
+        ? (results.length
+            ? results.map(r => `
+                <div class="card" style="padding:12px; margin-top:10px;">
+                  <strong>${escapeHtml(r.title)}</strong>
+                  <div class="muted" style="font-size:14px; margin-top:4px;">
+                    ${escapeHtml(getProjectName(r.project_id))}${r.note ? ' · есть заметка' : ''}
+                  </div>
+                </div>`).join('')
+            : '<div class="empty">Ничего не найдено.</div>')
+        : '<div class="empty">Начни вводить слово из названия или заметки.</div>';
     }
 
     function renderArchive() {
-      const completed = state.tasks.filter(t => t.completed).sort((a,b) => (b.completed_at || '').localeCompare(a.completed_at || ''));
+      const completed = state.tasks
+        .filter(t => t.completed)
+        .sort((a,b) => (b.completed_at || '').localeCompare(a.completed_at || ''));
       const now = new Date();
       const weekAgo = new Date(now); weekAgo.setDate(now.getDate() - 7);
       const monthAgo = new Date(now); monthAgo.setMonth(now.getMonth() - 1);
@@ -682,17 +756,27 @@ for (let i = 0; i < 42; i++) {
         'Раньше': completed.filter(t => t.completed_at && new Date(t.completed_at) < monthAgo)
       };
       const wrap = document.getElementById('archiveList');
-      const html = Object.entries(groups).map(([label, items]) => items.length ? `
-        <div style="margin-bottom:16px;">
-          <div class="muted" style="font-size:12px; text-transform:uppercase; font-weight:700; letter-spacing:.04em; margin-bottom:8px;">${label}</div>
-          ${items.map(t => `<div class="archive-row"><div><strong>${escapeHtml(t.title)}</strong><div class="muted" style="font-size:13px;">${escapeHtml(getProjectName(t.project_id))}</div></div><div class="muted" style="font-size:12px;">${new Date(t.completed_at).toLocaleDateString('ru-RU')}</div></div>`).join('')}
-        </div>` : '').join('');
+      const html = Object.entries(groups).map(([label, items]) =>
+        items.length ? `
+          <div style="margin-bottom:16px;">
+            <div class="muted" style="font-size:12px; text-transform:uppercase; font-weight:700; letter-spacing:.04em; margin-bottom:8px;">${label}</div>
+            ${items.map(t => `
+              <div class="archive-row">
+                <div>
+                  <strong>${escapeHtml(t.title)}</strong>
+                  <div class="muted" style="font-size:13px;">${escapeHtml(getProjectName(t.project_id))}</div>
+                </div>
+                <div class="muted" style="font-size:12px;">${new Date(t.completed_at).toLocaleDateString('ru-RU')}</div>
+              </div>`).join('')}
+          </div>` : ''
+      ).join('');
       wrap.innerHTML = html || '<div class="empty">Архив пока пуст.</div>';
     }
 
     function renderProjectOptions() {
       const select = document.getElementById('taskProject');
-      const options = [`<option value="">Разобрать позже</option>`].concat(state.projects.filter(Boolean).map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`));
+      const options = [`<option value="">Разобрать позже</option>`]
+        .concat(state.projects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`));
       select.innerHTML = options.join('');
     }
 
@@ -702,7 +786,10 @@ for (let i = 0; i < 42; i++) {
           const taskId = e.currentTarget.closest('.task')?.dataset.id;
           const task = state.tasks.find(t => String(t.id) === String(taskId));
           if (!task) return;
-          const updates = { completed: !task.completed, completed_at: !task.completed ? new Date().toISOString() : null };
+          const updates = {
+            completed: !task.completed,
+            completed_at: !task.completed ? new Date().toISOString() : null
+          };
           const { error } = await supabaseClient.from('tasks').update(updates).eq('id', taskId);
           if (!error) await refreshData();
         };
@@ -719,15 +806,20 @@ for (let i = 0; i < 42; i++) {
 
     function switchView(view) {
       state.view = view;
-      document.querySelectorAll('.view').forEach(v => v.classList.toggle('hidden', v.dataset.view !== view));
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.target === view));
+      document.querySelectorAll('.view').forEach(v =>
+        v.classList.toggle('hidden', v.dataset.view !== view)
+      );
+      document.querySelectorAll('.nav-item').forEach(item =>
+        item.classList.toggle('active', item.dataset.target === view)
+      );
       appContent.setAttribute('data-desktop-grid', view === 'today' ? 'today' : 'single');
       if (view === 'calendar') renderCalendar();
       if (view === 'search') renderSearch();
     }
 
     function resetTaskForm() {
-      ['taskTitle','taskDeadline','taskSection','taskPlannedDate','taskPlannedTime','taskNote'].forEach(id => document.getElementById(id).value = '');
+      ['taskTitle','taskDeadline','taskSection','taskPlannedDate','taskPlannedTime','taskNote']
+        .forEach(id => document.getElementById(id).value = '');
       document.getElementById('taskRepeat').value = 'none';
       document.getElementById('taskProject').value = '';
       clearNotice(document.getElementById('taskNotice'));
@@ -780,9 +872,21 @@ for (let i = 0; i < 42; i++) {
     async function saveProject() {
       const name = document.getElementById('projectName').value.trim();
       if (!name) return;
-      const sections = document.getElementById('projectSections').value.split(',').map(s => s.trim()).filter(Boolean);
-      const { error } = await supabaseClient.from('projects').insert({ user_id: state.user.id, name, sections, is_inbox: false });
-      if (error) return;
+      const sections = document
+        .getElementById('projectSections')
+        .value.split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+      const { error } = await supabaseClient.from('projects').insert({
+        user_id: state.user.id,
+        name,
+        sections,
+        is_inbox: false
+      });
+      if (error) {
+        console.error('saveProject error', error);
+        return;
+      }
       projectSheet.classList.remove('open');
       document.getElementById('projectName').value = '';
       document.getElementById('projectSections').value = '';
@@ -811,12 +915,17 @@ for (let i = 0; i < 42; i++) {
         await refreshData();
         switchView(state.view);
       } catch (e) {
+        console.error('startApp error', e);
         authScreen.classList.add('open');
         appContent.classList.add('hidden');
         bottomNav.classList.add('hidden');
         openTaskSheetBtn.classList.add('hidden');
         logoutBtn.classList.add('hidden');
-        showNotice(authNotice, 'Ошибка доступа к таблицам Supabase. Проверь, что tables projects и tasks созданы и доступны для этого пользователя.');
+        showNotice(
+          authNotice,
+          'Ошибка доступа к таблицам Supabase. Проверь, что таблицы projects и tasks созданы и разрешены для анонимного пользователя.',
+          true
+        );
       }
     }
 
@@ -832,6 +941,7 @@ for (let i = 0; i < 42; i++) {
           authScreen.classList.add('open');
         }
       } catch (e) {
+        console.error('boot error', e);
         authScreen.classList.add('open');
         showNotice(authNotice, 'Не удалось восстановить сессию. Попробуй войти снова.', true);
       }
@@ -840,27 +950,52 @@ for (let i = 0; i < 42; i++) {
     document.getElementById('signUpBtn').addEventListener('click', signUp);
     document.getElementById('signInBtn').addEventListener('click', signIn);
     logoutBtn.addEventListener('click', logout);
+
     document.getElementById('themeToggle').onclick = () => {
-      document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      document.documentElement.setAttribute(
+        'data-theme',
+        document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+      );
     };
-    document.querySelectorAll('.nav-item').forEach(item => item.onclick = () => switchView(item.dataset.target));
+
+    document.querySelectorAll('.nav-item').forEach(item =>
+      item.onclick = () => switchView(item.dataset.target)
+    );
+
     openTaskSheetBtn.onclick = () => { resetTaskForm(); taskSheet.classList.add('open'); };
     document.getElementById('closeTaskSheet').onclick = () => taskSheet.classList.remove('open');
     document.getElementById('saveTaskBtn').onclick = saveTask;
     document.getElementById('saveTaskLater').onclick = saveTask;
+
     document.getElementById('newProjectBtn').onclick = () => projectSheet.classList.add('open');
     document.getElementById('closeProjectSheet').onclick = () => projectSheet.classList.remove('open');
     document.getElementById('saveProjectBtn').onclick = saveProject;
+
     document.getElementById('searchInput').oninput = renderSearch;
     document.getElementById('quickToCalendar').onclick = () => switchView('calendar');
-    document.getElementById('prevMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); };
-    document.getElementById('nextMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); };
-  document.getElementById('calendarJumpToday').onclick = () => {
-  const now = new Date();
-  state.calendarDate = now;
-  state.selectedCalendarDate = toLocalISODate(now);
-  renderCalendar();
-};
+
+    document.getElementById('prevMonthBtn').onclick = () => {
+      state.calendarDate = new Date(
+        state.calendarDate.getFullYear(),
+        state.calendarDate.getMonth() - 1,
+        1
+      );
+      renderCalendar();
+    };
+    document.getElementById('nextMonthBtn').onclick = () => {
+      state.calendarDate = new Date(
+        state.calendarDate.getFullYear(),
+        state.calendarDate.getMonth() + 1,
+        1
+      );
+      renderCalendar();
+    };
+    document.getElementById('calendarJumpToday').onclick = () => {
+      const now = new Date();
+      state.calendarDate = now;
+      state.selectedCalendarDate = toLocalISODate(now);
+      renderCalendar();
+    };
 
     supabaseClient.auth.onAuthStateChange(async (_event, session) => {
       state.session = session || null;
