@@ -323,9 +323,6 @@
             <button class="mini-btn" id="nextMonthBtn">→</button>
           </div>
           <div id="calendarGridWrap"></div>
-          <div style="display:flex; justify-content:flex-end; margin-top:14px;">
-  <button class="secondary-btn" id="addTaskForSelectedDayBtn">Добавить задачу на выбранный день</button>
-</div>
           <div style="margin-top:14px;" id="calendarTasks"></div>
         </article>
       </section>
@@ -650,10 +647,21 @@
             <div class="task-meta">${t.deadline ? `<div class="chip">Дедлайн ${formatDate(t.deadline)}</div>` : ''}</div>
           </div>`).join('') : '<div class="empty">На этот день задач нет.</div>'}`;
 
-      document.querySelectorAll('.day-cell').forEach(btn => btn.onclick = () => {
-        state.selectedCalendarDate = btn.dataset.date;
-        renderCalendar();
-      });
+    document.querySelectorAll('.day-cell').forEach(btn => btn.onclick = () => {
+  const selected = btn.dataset.date;
+  state.selectedCalendarDate = selected;
+  renderCalendar();
+
+  taskSheet.classList.add('open');
+  clearNotice(document.getElementById('taskNotice'));
+  document.getElementById('taskTitle').value = '';
+  document.getElementById('taskDeadline').value = '';
+  document.getElementById('taskSection').value = '';
+  document.getElementById('taskRepeat').value = 'none';
+  document.getElementById('taskPlannedDate').value = selected;
+  document.getElementById('taskPlannedTime').value = '';
+  document.getElementById('taskNote').value = '';
+});
       bindTaskActions();
     }
 
@@ -804,7 +812,6 @@
     document.getElementById('quickToCalendar').onclick = () => switchView('calendar');
     document.getElementById('prevMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); };
     document.getElementById('nextMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); };
-document.getElementById('addTaskForSelectedDayBtn').onclick = () => {
   const selected =
     state.selectedCalendarDate ||
     new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1)
