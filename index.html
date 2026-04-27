@@ -226,6 +226,23 @@
     }
     .error { background: var(--color-danger-soft); color: #8f5f52; }
     .empty { padding: 22px 12px; text-align:center; color: var(--color-text-muted); }
+    .calendar-weekdays, .calendar-grid {
+      display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:8px;
+    }
+    .calendar-weekdays { margin-bottom:8px; }
+    .weekday { text-align:center; font-size:12px; color:var(--color-text-muted); font-weight:700; text-transform:lowercase; }
+    .day-cell {
+      min-height:72px; border-radius:18px; border:1px solid var(--color-border); background:var(--color-surface-2);
+      padding:8px; display:flex; flex-direction:column; gap:6px; align-items:flex-start; justify-content:flex-start;
+    }
+    .day-cell.outside { opacity:.42; }
+    .day-cell.today { border-color: transparent; background: var(--color-primary-soft); }
+    .day-cell.selected { outline: 2px solid var(--color-primary); }
+    .day-num { font-size:13px; font-weight:700; }
+    .day-dots { display:flex; flex-wrap:wrap; gap:4px; }
+    .day-dot { width:7px; height:7px; border-radius:999px; background:var(--color-primary); }
+    .day-count { margin-top:auto; font-size:11px; color:var(--color-text-muted); }
+
     .install-note { font-size: 12px; color: var(--color-text-muted); margin-top: 8px; }
     @media (max-width: 430px) {
       .fab { right: 18px; left: auto; transform: none; }
@@ -300,8 +317,13 @@
             <h3>Календарь</h3>
             <span class="section-link">Месяц</span>
           </div>
-          <div id="calendarMonth" class="muted"></div>
-          <div style="margin-top:12px;" id="calendarTasks"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
+            <button class="mini-btn" id="prevMonthBtn">←</button>
+            <div id="calendarMonth" style="font-weight:700; font-size:18px;"></div>
+            <button class="mini-btn" id="nextMonthBtn">→</button>
+          </div>
+          <div id="calendarGridWrap"></div>
+          <div style="margin-top:14px;" id="calendarTasks"></div>
         </article>
       </section>
 
@@ -406,7 +428,8 @@
       user: null,
       tasks: [],
       projects: [],
-      view: 'today'
+      view: 'today',
+      calendarDate: new Date()
     };
 
     const authScreen = document.getElementById('authScreen');
@@ -572,19 +595,62 @@
     }
 
     function renderCalendar() {
-      const now = new Date();
-      const currentMonth = now.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
-      document.getElementById('calendarMonth').innerHTML = `<strong style="color:var(--color-text);">${currentMonth}</strong><div style="margin-top:8px;">Показываем задачи, у которых выставлен день. Для первой версии — простой список по датам месяца.</div>`;
-      const tasks = state.tasks.filter(t => !t.completed && t.planned_date).sort((a,b) => (a.planned_date + (a.planned_time||'')).localeCompare(b.planned_date + (b.planned_time||'')));
-      document.getElementById('calendarTasks').innerHTML = tasks.length ? tasks.map(t => `
-        <div class="task ${t.completed ? 'done' : ''}" data-id="${t.id}">
-          <button class="check toggle-task"></button>
-          <div>
-            <h4>${escapeHtml(t.title)}</h4>
-            <p>${formatDate(t.planned_date)}${t.planned_time ? ' · ' + t.planned_time : ' · весь день'}</p>
-          </div>
-          <div class="task-meta"><button class="mini-btn">${escapeHtml(getProjectName(t.project_id))}</button></div>
-        </div>`).join('') : '<div class="empty">В календарь пока ничего не поставлено.</div>';
+      const base = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1);
+      const year = base.getFullYear();
+      const month = base.getMonth();
+      document.getElementById('calendarMonth').textContent = base.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+
+      const weekdays = ['пн','вт','ср','чт','пт','сб','вс'];
+      const firstDay = new Date(year, month, 1);
+      const startOffset = (firstDay.getDay() + 6) % 7;
+      const gridStart = new Date(year, month, 1 - startOffset);
+      const todayIso = new Date().toISOString().slice(0,10);
+      const selectedIso = state.selectedCalendarDate || new Date(year, month, 1).toISOString().slice(0,10);
+
+      const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
+      let cells = '';
+      for (let i = 0; i < 42; i++) {
+        const d = new Date(gridStart);
+        d.setDate(gridStart.getDate() + i);
+        const iso = d.toISOString().slice(0,10);
+        const tasksForDay = monthTasks.filter(t => t.planned_date === iso);
+        const outside = d.getMonth() !== month;
+        const isToday = iso === todayIso;
+        const isSelected = iso === selectedIso;
+        cells += `
+          <button type="button" class="day-cell ${outside ? 'outside' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" data-date="${iso}">
+            <span class="day-num">${d.getDate()}</span>
+            <div class="day-dots">${tasksForDay.slice(0,4).map(() => '<span class="day-dot"></span>').join('')}</div>
+            <span class="day-count">${tasksForDay.length ? tasksForDay.length + ' задач' : ''}</span>
+          </button>`;
+      }
+
+      document.getElementById('calendarGridWrap').innerHTML = `
+        <div class="calendar-weekdays">${weekdays.map(d => `<div class="weekday">${d}</div>`).join('')}</div>
+        <div class="calendar-grid">${cells}</div>`;
+
+      const selectedTasks = monthTasks
+        .filter(t => t.planned_date === selectedIso)
+        .sort((a,b) => ((a.planned_time || '99:99').localeCompare(b.planned_time || '99:99')));
+
+      document.getElementById('calendarTasks').innerHTML = `
+        <div class="section-head" style="margin-top:4px; margin-bottom:10px;">
+          <h3 style="font-size:17px;">${new Date(selectedIso + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}</h3>
+        </div>
+        ${selectedTasks.length ? selectedTasks.map(t => `
+          <div class="task" data-id="${t.id}">
+            <button class="check toggle-task"></button>
+            <div>
+              <h4>${escapeHtml(t.title)}</h4>
+              <p>${t.planned_time ? t.planned_time : 'весь день'} · ${escapeHtml(getProjectName(t.project_id))}${t.section ? ' · ' + escapeHtml(t.section) : ''}</p>
+            </div>
+            <div class="task-meta">${t.deadline ? `<div class="chip">Дедлайн ${formatDate(t.deadline)}</div>` : ''}</div>
+          </div>`).join('') : '<div class="empty">На этот день задач нет.</div>'}`;
+
+      document.querySelectorAll('.day-cell').forEach(btn => btn.onclick = () => {
+        state.selectedCalendarDate = btn.dataset.date;
+        renderCalendar();
+      });
       bindTaskActions();
     }
 
@@ -733,6 +799,8 @@
     document.getElementById('saveProjectBtn').onclick = saveProject;
     document.getElementById('searchInput').oninput = renderSearch;
     document.getElementById('quickToCalendar').onclick = () => switchView('calendar');
+    document.getElementById('prevMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); };
+    document.getElementById('nextMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); };
 
     supabaseClient.auth.getSession().then(({ data }) => {
       if (data.session) {
