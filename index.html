@@ -323,6 +323,9 @@
             <button class="mini-btn" id="nextMonthBtn">→</button>
           </div>
           <div id="calendarGridWrap"></div>
+          <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+  <button class="secondary-btn" id="addTaskForSelectedDayBtn">Добавить задачу на выбранный день</button>
+</div>
           <div style="margin-top:14px;" id="calendarTasks"></div>
         </article>
       </section>
@@ -801,7 +804,23 @@
     document.getElementById('quickToCalendar').onclick = () => switchView('calendar');
     document.getElementById('prevMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); };
     document.getElementById('nextMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); };
+document.getElementById('addTaskForSelectedDayBtn').onclick = () => {
+  const selected =
+    state.selectedCalendarDate ||
+    new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1)
+      .toISOString()
+      .slice(0, 10);
 
+  taskSheet.classList.add('open');
+  clearNotice(document.getElementById('taskNotice'));
+  document.getElementById('taskTitle').value = '';
+  document.getElementById('taskDeadline').value = '';
+  document.getElementById('taskSection').value = '';
+  document.getElementById('taskRepeat').value = 'none';
+  document.getElementById('taskPlannedDate').value = selected;
+  document.getElementById('taskPlannedTime').value = '';
+  document.getElementById('taskNote').value = '';
+};
     supabaseClient.auth.getSession().then(({ data }) => {
       if (data.session) {
         state.session = data.session;
