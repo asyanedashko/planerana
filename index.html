@@ -414,15 +414,23 @@
     const SUPABASE_KEY = 'sb_publishable_cSP87ewnVdv3bNpltq1I2Q_ivkm7O8y';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const state = {
-      session: null,
-      user: null,
-      tasks: [],
-      projects: [],
-      view: 'today',
-      calendarDate: new Date(),
-      selectedCalendarDate: new Date().toISOString().slice(0, 10)
-    };
+  const today = new Date();
+const toLocalISODate = (d) => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const state = {
+  session: null,
+  user: null,
+  tasks: [],
+  projects: [],
+  view: 'today',
+  calendarDate: today,
+  selectedCalendarDate: toLocalISODate(today)
+};
 
     const authScreen = document.getElementById('authScreen');
     const authNotice = document.getElementById('authNotice');
@@ -436,10 +444,12 @@
     const todayLabel = document.getElementById('todayLabel');
 
     const formatDate = (dateStr) => {
-      if (!dateStr) return 'без даты';
-      const d = new Date(dateStr + 'T00:00:00');
-      return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-    };
+  if (!dateStr) return 'без даты';
+  const [year, month, day] = dateStr.split('-').map(Number);
+  if (!year || !month || !day) return dateStr;
+  const d = new Date(year, month - 1, day); 
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+};
     todayLabel.textContent = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
 
     function showNotice(el, text, isError = false) {
@@ -592,8 +602,8 @@
       const firstDay = new Date(year, month, 1);
       const startOffset = (firstDay.getDay() + 6) % 7;
       const gridStart = new Date(year, month, 1 - startOffset);
-      const todayIso = new Date().toISOString().slice(0,10);
-      const selectedIso = state.selectedCalendarDate || todayIso;
+     const todayLocal = toLocalISODate(new Date());
+const selectedIso = state.selectedCalendarDate || todayLocal;
       const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
 
       let cells = '';
@@ -842,11 +852,12 @@
     document.getElementById('quickToCalendar').onclick = () => switchView('calendar');
     document.getElementById('prevMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); };
     document.getElementById('nextMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); };
-    document.getElementById('calendarJumpToday').onclick = () => {
-      state.calendarDate = new Date();
-      state.selectedCalendarDate = new Date().toISOString().slice(0,10);
-      renderCalendar();
-    };
+  document.getElementById('calendarJumpToday').onclick = () => {
+  const now = new Date();
+  state.calendarDate = now;
+  state.selectedCalendarDate = toLocalISODate(now);
+  renderCalendar();
+};
 
     supabaseClient.auth.onAuthStateChange(async (_event, session) => {
       state.session = session || null;
