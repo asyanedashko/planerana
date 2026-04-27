@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#8a6a57" />
-  <title>Task Planner App</title>
+  <title>planner-fixed</title>
   <link rel="preconnect" href="https://api.fontshare.com">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -70,12 +70,11 @@
     textarea { resize: vertical; min-height: 100px; }
     .hidden { display: none !important; }
     .app {
-      max-width: 430px;
+      width: min(100%, 980px);
       margin: 0 auto;
       min-height: 100vh;
       background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
       position: relative;
-      overflow: hidden;
       border-inline: 1px solid var(--color-border);
     }
     .topbar {
@@ -108,6 +107,7 @@
       padding: 0 18px 118px;
       display: grid;
       gap: 16px;
+      grid-template-columns: 1fr;
     }
     .card {
       border: 1px solid var(--color-border);
@@ -116,9 +116,7 @@
       box-shadow: var(--shadow-sm);
       padding: 16px;
     }
-    .hero {
-      background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-2) 100%);
-    }
+    .hero { background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-2) 100%); }
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 12px; border-radius: var(--radius-full);
@@ -166,9 +164,7 @@
       padding: 8px 10px; border-radius: 12px; border: 1px solid var(--color-border);
       background: var(--color-surface-2); font-size: 12px;
     }
-    .pill-btn, .primary-btn {
-      min-height: 48px; border-radius: 16px; padding: 0 16px; font-weight: 700;
-    }
+    .pill-btn, .primary-btn { min-height: 48px; border-radius: 16px; padding: 0 16px; font-weight: 700; }
     .pill-btn { background: var(--color-surface-2); border: 1px solid var(--color-border); }
     .primary-btn { background: var(--color-primary); color: #fff; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -184,19 +180,17 @@
       border:1px solid var(--color-border); background: var(--color-surface-2);
     }
     .fab {
-      position: fixed; left: 50%; transform: translateX(148px);
+      position: fixed; right: max(18px, calc((100vw - min(100vw, 980px)) / 2 + 18px));
       bottom: 92px; width: 58px; height: 58px; border-radius: 20px; background: var(--color-primary);
       color: white; display: grid; place-items: center; box-shadow: var(--shadow-md); z-index: 8;
     }
     .bottom-nav {
       position: fixed; left: 50%; transform: translateX(-50%); bottom: 0;
-      width: min(430px, 100vw); padding: 12px 14px 18px;
+      width: min(980px, 100vw); padding: 12px 14px 18px;
       background: linear-gradient(180deg, rgba(248,242,234,0) 0%, var(--color-bg) 20%, var(--color-bg) 100%);
       z-index: 7;
     }
-    [data-theme="dark"] .bottom-nav {
-      background: linear-gradient(180deg, rgba(33,25,21,0) 0%, var(--color-bg) 20%, var(--color-bg) 100%);
-    }
+    [data-theme="dark"] .bottom-nav { background: linear-gradient(180deg, rgba(33,25,21,0) 0%, var(--color-bg) 20%, var(--color-bg) 100%); }
     .nav-rail {
       display:grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap:8px; padding:8px;
       border-radius: 22px; border:1px solid var(--color-border); background: color-mix(in srgb, var(--color-surface) 92%, transparent);
@@ -213,7 +207,7 @@
     }
     .sheet.open, .auth-screen.open { display:flex; }
     .sheet-card, .auth-card {
-      width: min(430px, 100vw); background: var(--color-surface); border-top-left-radius: 28px; border-top-right-radius: 28px;
+      width: min(560px, 100vw); background: var(--color-surface); border-top-left-radius: 28px; border-top-right-radius: 28px;
       border: 1px solid var(--color-border); padding: 18px; max-height: 92vh; overflow:auto;
     }
     .auth-screen { align-items:center; }
@@ -221,14 +215,10 @@
     .form-group { display:grid; gap:6px; margin-bottom: 12px; }
     .form-group label { font-size: 12px; text-transform: uppercase; letter-spacing:.04em; color: var(--color-text-muted); font-weight:700; }
     .helper { font-size: 12px; color: var(--color-text-muted); }
-    .notice {
-      padding: 12px; border-radius: 16px; background: var(--color-primary-soft); color: var(--color-primary); font-size: 14px; margin-bottom: 12px;
-    }
+    .notice { padding: 12px; border-radius: 16px; background: var(--color-primary-soft); color: var(--color-primary); font-size: 14px; margin-bottom: 12px; }
     .error { background: var(--color-danger-soft); color: #8f5f52; }
     .empty { padding: 22px 12px; text-align:center; color: var(--color-text-muted); }
-    .calendar-weekdays, .calendar-grid {
-      display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:8px;
-    }
+    .calendar-weekdays, .calendar-grid { display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:8px; }
     .calendar-weekdays { margin-bottom:8px; }
     .weekday { text-align:center; font-size:12px; color:var(--color-text-muted); font-weight:700; text-transform:lowercase; }
     .day-cell {
@@ -242,11 +232,19 @@
     .day-dots { display:flex; flex-wrap:wrap; gap:4px; }
     .day-dot { width:7px; height:7px; border-radius:999px; background:var(--color-primary); }
     .day-count { margin-top:auto; font-size:11px; color:var(--color-text-muted); }
-
     .install-note { font-size: 12px; color: var(--color-text-muted); margin-top: 8px; }
-    @media (max-width: 430px) {
-      .fab { right: 18px; left: auto; transform: none; }
+    @media (min-width: 760px) {
+      .page[data-desktop-grid="today"] { grid-template-columns: 1.2fr .8fr; align-items: start; }
+      .page[data-desktop-grid="today"] .hero { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      .stats, .grid-2 { grid-template-columns: 1fr; }
+      .task { grid-template-columns: auto 1fr; }
+      .task-meta { grid-column: 2; text-align: left; }
+      .calendar-weekdays, .calendar-grid { gap: 4px; }
+      .day-cell { min-height: 64px; padding: 6px; }
       .bottom-nav { left: 0; transform: none; width: 100%; }
+      .fab { right: 18px; }
     }
   </style>
 </head>
@@ -272,7 +270,7 @@
       </div>
     </header>
 
-    <main id="appContent" class="page hidden">
+    <main id="appContent" class="page hidden" data-desktop-grid="today">
       <section class="view" data-view="today">
         <article class="card hero">
           <div class="eyebrow">Сегодня · <span id="todayLabel"></span></div>
@@ -294,9 +292,7 @@
         </article>
 
         <article class="card">
-          <div class="section-head">
-            <h3>Дедлайны на 5 дней</h3>
-          </div>
+          <div class="section-head"><h3>Дедлайны на 5 дней</h3></div>
           <div id="upcomingDeadlines"></div>
         </article>
       </section>
@@ -315,7 +311,7 @@
         <article class="card">
           <div class="section-head">
             <h3>Календарь</h3>
-            <span class="section-link">Месяц</span>
+            <button class="section-link" id="calendarJumpToday">Сегодня</button>
           </div>
           <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
             <button class="mini-btn" id="prevMonthBtn">←</button>
@@ -329,9 +325,7 @@
 
       <section class="view hidden" data-view="search">
         <article class="card">
-          <div class="section-head">
-            <h3>Поиск</h3>
-          </div>
+          <div class="section-head"><h3>Поиск</h3></div>
           <div class="searchbox">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
             <input id="searchInput" placeholder="Искать по названию и заметке" style="border:0;background:transparent;padding:0;" />
@@ -342,9 +336,7 @@
 
       <section class="view hidden" data-view="archive">
         <article class="card">
-          <div class="section-head">
-            <h3>Архив</h3>
-          </div>
+          <div class="section-head"><h3>Архив</h3></div>
           <div id="archiveList"></div>
         </article>
       </section>
@@ -407,14 +399,13 @@
       <h2 style="margin-top:14px;">Твой планировщик готов почти полностью.</h2>
       <p class="muted">Остался только вход по почте и паролю, чтобы данные хранились в облаке и могли открываться на разных устройствах.</p>
       <div id="authNotice" class="notice hidden"></div>
-      <div class="helper" id="clickHint">Если кнопка не сработала, обнови превью один раз и нажми снова.</div>
       <div class="form-group"><label>Почта</label><input id="authEmail" type="email" placeholder="name@example.com" /></div>
       <div class="form-group"><label>Пароль</label><input id="authPassword" type="password" placeholder="Минимум 6 символов" /></div>
       <div class="grid-2">
         <button type="button" class="pill-btn" id="signInBtn">Войти</button>
         <button type="button" class="primary-btn" id="signUpBtn">Зарегистрироваться</button>
       </div>
-      <p class="install-note">После входа приложение можно открыть на телефоне и ноутбуках под одной почтой. Установить как приложение получится уже после публикации.</p>
+      <p class="install-note">Если в Supabase включено подтверждение почты, после регистрации сначала подтверди email, потом входи.</p>
     </div>
   </div>
 
@@ -429,7 +420,8 @@
       tasks: [],
       projects: [],
       view: 'today',
-      calendarDate: new Date()
+      calendarDate: new Date(),
+      selectedCalendarDate: new Date().toISOString().slice(0, 10)
     };
 
     const authScreen = document.getElementById('authScreen');
@@ -448,8 +440,7 @@
       const d = new Date(dateStr + 'T00:00:00');
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
     };
-    const formatWeekday = () => new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
-    todayLabel.textContent = formatWeekday();
+    todayLabel.textContent = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
 
     function showNotice(el, text, isError = false) {
       el.textContent = text;
@@ -461,10 +452,8 @@
       el.classList.add('hidden');
       el.classList.remove('error');
     }
-
-    async function ensureSchema() {
-      // Schema creation isn't available from publishable key; app works after tables are created in SQL editor.
-      return true;
+    function escapeHtml(str = '') {
+      return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
     }
 
     async function signUp() {
@@ -474,13 +463,14 @@
       if (!email || !password) return showNotice(authNotice, 'Нужно ввести почту и пароль.', true);
       const { error } = await supabaseClient.auth.signUp({ email, password });
       if (error) return showNotice(authNotice, error.message, true);
-      showNotice(authNotice, 'Регистрация прошла. Если Supabase попросит подтвердить почту, открой письмо и потом нажми «Войти».');
+      showNotice(authNotice, 'Регистрация прошла. Если придёт письмо подтверждения, открой его и потом войди.');
     }
 
     async function signIn() {
       clearNotice(authNotice);
       const email = document.getElementById('authEmail').value.trim();
       const password = document.getElementById('authPassword').value.trim();
+      if (!email || !password) return showNotice(authNotice, 'Нужно ввести почту и пароль.', true);
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) return showNotice(authNotice, error.message, true);
       state.session = data.session;
@@ -510,7 +500,7 @@
           is_inbox: true,
           sections: []
         });
-        if (insertError && !String(insertError.message).includes('duplicate')) throw insertError;
+        if (insertError && !String(insertError.message).toLowerCase().includes('duplicate')) throw insertError;
         const { data: retry, error: retryError } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: true });
         if (retryError) throw retryError;
         state.projects = retry || [];
@@ -530,34 +520,10 @@
       return state.projects.find(p => p.id === projectId)?.name || 'Без проекта';
     }
 
-    function renderToday() {
-      const todayIso = new Date().toISOString().slice(0, 10);
-      const todayTasks = state.tasks.filter(t => !t.completed && t.planned_date === todayIso);
-      const todayWrap = document.getElementById('todayTasks');
-      const upcomingWrap = document.getElementById('upcomingDeadlines');
-      const upcoming = state.tasks.filter(t => {
-        if (t.completed || !t.deadline) return false;
-        const diff = Math.ceil((new Date(t.deadline + 'T00:00:00') - new Date(todayIso + 'T00:00:00')) / 86400000);
-        return diff >= 0 && diff <= 5;
-      }).sort((a,b) => a.deadline.localeCompare(b.deadline));
-
-      document.getElementById('statToday').textContent = todayTasks.length;
-      document.getElementById('statUpcoming').textContent = upcoming.length;
-      document.getElementById('statInbox').textContent = state.tasks.filter(t => !t.completed && t.project_id === getInboxProject()?.id).length;
-
-      todayWrap.innerHTML = todayTasks.length ? todayTasks.map(taskCard).join('') : '<div class="empty">На сегодня пока пусто. Можно спокойно добавить первую задачу.</div>';
-      upcomingWrap.innerHTML = upcoming.length ? upcoming.map(t => `
-        <div class="deadline-row">
-          <div><strong>${escapeHtml(t.title)}</strong><div class="muted" style="font-size:12px;">${escapeHtml(getProjectName(t.project_id))}</div></div>
-          <div class="chip">${formatDate(t.deadline)}</div>
-        </div>`).join('') : '<div class="empty">На ближайшие 5 дней дедлайнов нет.</div>';
-      bindTaskActions();
-    }
-
     function taskCard(t) {
       return `
         <div class="task ${t.completed ? 'done' : ''}" data-id="${t.id}">
-          <button class="check toggle-task" aria-label="Отметить выполненной"></button>
+          <button type="button" class="check toggle-task" aria-label="Отметить выполненной"></button>
           <div>
             <h4>${escapeHtml(t.title)}</h4>
             <p>${escapeHtml(getProjectName(t.project_id))}${t.section ? ' · ' + escapeHtml(t.section) : ''}</p>
@@ -569,9 +535,31 @@
           </div>
           <div class="task-meta">
             <div class="muted" style="font-size:12px;">${t.planned_time || 'Без часа'}</div>
-            <button class="mini-btn open-edit">Открыть</button>
+            <button type="button" class="mini-btn open-edit" data-open-task="${t.id}">Открыть</button>
           </div>
         </div>`;
+    }
+
+    function renderToday() {
+      const todayIso = new Date().toISOString().slice(0, 10);
+      const todayTasks = state.tasks.filter(t => !t.completed && t.planned_date === todayIso);
+      const upcoming = state.tasks.filter(t => {
+        if (t.completed || !t.deadline) return false;
+        const diff = Math.ceil((new Date(t.deadline + 'T00:00:00') - new Date(todayIso + 'T00:00:00')) / 86400000);
+        return diff >= 0 && diff <= 5;
+      }).sort((a,b) => a.deadline.localeCompare(b.deadline));
+
+      document.getElementById('statToday').textContent = todayTasks.length;
+      document.getElementById('statUpcoming').textContent = upcoming.length;
+      document.getElementById('statInbox').textContent = state.tasks.filter(t => !t.completed && t.project_id === getInboxProject()?.id).length;
+
+      document.getElementById('todayTasks').innerHTML = todayTasks.length ? todayTasks.map(taskCard).join('') : '<div class="empty">На сегодня пока пусто. Можно спокойно добавить первую задачу.</div>';
+      document.getElementById('upcomingDeadlines').innerHTML = upcoming.length ? upcoming.map(t => `
+        <div class="deadline-row">
+          <div><strong>${escapeHtml(t.title)}</strong><div class="muted" style="font-size:12px;">${escapeHtml(getProjectName(t.project_id))}</div></div>
+          <div class="chip">${formatDate(t.deadline)}</div>
+        </div>`).join('') : '<div class="empty">На ближайшие 5 дней дедлайнов нет.</div>';
+      bindTaskActions();
     }
 
     function renderProjects() {
@@ -605,9 +593,9 @@
       const startOffset = (firstDay.getDay() + 6) % 7;
       const gridStart = new Date(year, month, 1 - startOffset);
       const todayIso = new Date().toISOString().slice(0,10);
-      const selectedIso = state.selectedCalendarDate || new Date(year, month, 1).toISOString().slice(0,10);
-
+      const selectedIso = state.selectedCalendarDate || todayIso;
       const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
+
       let cells = '';
       for (let i = 0; i < 42; i++) {
         const d = new Date(gridStart);
@@ -636,10 +624,11 @@
       document.getElementById('calendarTasks').innerHTML = `
         <div class="section-head" style="margin-top:4px; margin-bottom:10px;">
           <h3 style="font-size:17px;">${new Date(selectedIso + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}</h3>
+          <button type="button" class="mini-btn" id="addTaskForSelectedDayBtn">Добавить</button>
         </div>
         ${selectedTasks.length ? selectedTasks.map(t => `
-          <div class="task" data-id="${t.id}">
-            <button class="check toggle-task"></button>
+          <div class="task ${t.completed ? 'done' : ''}" data-id="${t.id}">
+            <button type="button" class="check toggle-task" aria-label="Отметить выполненной"></button>
             <div>
               <h4>${escapeHtml(t.title)}</h4>
               <p>${t.planned_time ? t.planned_time : 'весь день'} · ${escapeHtml(getProjectName(t.project_id))}${t.section ? ' · ' + escapeHtml(t.section) : ''}</p>
@@ -647,21 +636,15 @@
             <div class="task-meta">${t.deadline ? `<div class="chip">Дедлайн ${formatDate(t.deadline)}</div>` : ''}</div>
           </div>`).join('') : '<div class="empty">На этот день задач нет.</div>'}`;
 
-    document.querySelectorAll('.day-cell').forEach(btn => btn.onclick = () => {
-  const selected = btn.dataset.date;
-  state.selectedCalendarDate = selected;
-  renderCalendar();
+      document.querySelectorAll('.day-cell').forEach(btn => {
+        btn.onclick = () => {
+          state.selectedCalendarDate = btn.dataset.date;
+          renderCalendar();
+        };
+      });
 
-  taskSheet.classList.add('open');
-  clearNotice(document.getElementById('taskNotice'));
-  document.getElementById('taskTitle').value = '';
-  document.getElementById('taskDeadline').value = '';
-  document.getElementById('taskSection').value = '';
-  document.getElementById('taskRepeat').value = 'none';
-  document.getElementById('taskPlannedDate').value = selected;
-  document.getElementById('taskPlannedTime').value = '';
-  document.getElementById('taskNote').value = '';
-});
+      const addBtn = document.getElementById('addTaskForSelectedDayBtn');
+      if (addBtn) addBtn.onclick = () => openTaskSheetForDate(selectedIso);
       bindTaskActions();
     }
 
@@ -696,18 +679,27 @@
 
     function renderProjectOptions() {
       const select = document.getElementById('taskProject');
-      select.innerHTML = state.projects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+      const options = [`<option value="">Разобрать позже</option>`].concat(state.projects.filter(Boolean).map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`));
+      select.innerHTML = options.join('');
     }
 
     function bindTaskActions() {
       document.querySelectorAll('.toggle-task').forEach(btn => {
         btn.onclick = async (e) => {
-          const taskId = e.currentTarget.closest('.task').dataset.id;
-          const task = state.tasks.find(t => t.id === taskId);
+          const taskId = e.currentTarget.closest('.task')?.dataset.id;
+          const task = state.tasks.find(t => String(t.id) === String(taskId));
           if (!task) return;
           const updates = { completed: !task.completed, completed_at: !task.completed ? new Date().toISOString() : null };
           const { error } = await supabaseClient.from('tasks').update(updates).eq('id', taskId);
           if (!error) await refreshData();
+        };
+      });
+      document.querySelectorAll('[data-open-task]').forEach(btn => {
+        btn.onclick = () => {
+          const task = state.tasks.find(t => String(t.id) === String(btn.dataset.openTask));
+          if (!task) return;
+          fillTaskForm(task);
+          taskSheet.classList.add('open');
         };
       });
     }
@@ -716,10 +708,34 @@
       state.view = view;
       document.querySelectorAll('.view').forEach(v => v.classList.toggle('hidden', v.dataset.view !== view));
       document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.target === view));
+      appContent.setAttribute('data-desktop-grid', view === 'today' ? 'today' : 'single');
+      if (view === 'calendar') renderCalendar();
+      if (view === 'search') renderSearch();
     }
 
-    function escapeHtml(str = '') {
-      return str.replace(/[&<>\"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    function resetTaskForm() {
+      ['taskTitle','taskDeadline','taskSection','taskPlannedDate','taskPlannedTime','taskNote'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('taskRepeat').value = 'none';
+      document.getElementById('taskProject').value = '';
+      clearNotice(document.getElementById('taskNotice'));
+    }
+
+    function fillTaskForm(task) {
+      clearNotice(document.getElementById('taskNotice'));
+      document.getElementById('taskTitle').value = task.title || '';
+      document.getElementById('taskDeadline').value = task.deadline || '';
+      document.getElementById('taskProject').value = task.project_id || '';
+      document.getElementById('taskSection').value = task.section || '';
+      document.getElementById('taskRepeat').value = task.repeat_rule || 'none';
+      document.getElementById('taskPlannedDate').value = task.planned_date || '';
+      document.getElementById('taskPlannedTime').value = task.planned_time || '';
+      document.getElementById('taskNote').value = task.note || '';
+    }
+
+    function openTaskSheetForDate(dateIso) {
+      resetTaskForm();
+      document.getElementById('taskPlannedDate').value = dateIso;
+      taskSheet.classList.add('open');
     }
 
     async function saveTask() {
@@ -727,12 +743,13 @@
       clearNotice(notice);
       const title = document.getElementById('taskTitle').value.trim();
       if (!title) return showNotice(notice, 'Нужно ввести название задачи.', true);
-      const projectId = document.getElementById('taskProject').value || getInboxProject()?.id;
+      const selectedProject = document.getElementById('taskProject').value;
+      const inboxId = getInboxProject()?.id || null;
       const payload = {
         user_id: state.user.id,
         title,
         deadline: document.getElementById('taskDeadline').value || null,
-        project_id: projectId || null,
+        project_id: selectedProject || inboxId,
         section: document.getElementById('taskSection').value.trim() || null,
         repeat_rule: document.getElementById('taskRepeat').value,
         planned_date: document.getElementById('taskPlannedDate').value || null,
@@ -743,8 +760,7 @@
       const { error } = await supabaseClient.from('tasks').insert(payload);
       if (error) return showNotice(notice, error.message, true);
       taskSheet.classList.remove('open');
-      ['taskTitle','taskDeadline','taskSection','taskPlannedDate','taskPlannedTime','taskNote'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('taskRepeat').value = 'none';
+      resetTaskForm();
       await refreshData();
     }
 
@@ -753,12 +769,11 @@
       if (!name) return;
       const sections = document.getElementById('projectSections').value.split(',').map(s => s.trim()).filter(Boolean);
       const { error } = await supabaseClient.from('projects').insert({ user_id: state.user.id, name, sections, is_inbox: false });
-      if (!error) {
-        projectSheet.classList.remove('open');
-        document.getElementById('projectName').value = '';
-        document.getElementById('projectSections').value = '';
-        await refreshData();
-      }
+      if (error) return;
+      projectSheet.classList.remove('open');
+      document.getElementById('projectName').value = '';
+      document.getElementById('projectSections').value = '';
+      await refreshData();
     }
 
     async function refreshData() {
@@ -780,28 +795,43 @@
       logoutBtn.classList.remove('hidden');
       userHint.textContent = state.user?.email || 'Вошла в приложение';
       try {
-        await ensureSchema();
         await refreshData();
+        switchView(state.view);
       } catch (e) {
         authScreen.classList.add('open');
         appContent.classList.add('hidden');
         bottomNav.classList.add('hidden');
         openTaskSheetBtn.classList.add('hidden');
         logoutBtn.classList.add('hidden');
-        showNotice(authNotice, 'Нужно создать таблицы в Supabase. Я объясню это следующим сообщением.', true);
+        showNotice(authNotice, 'Ошибка доступа к таблицам Supabase. Проверь, что tables projects и tasks созданы и доступны для этого пользователя.');
       }
     }
 
-    const signUpBtn = document.getElementById('signUpBtn');
-    const signInBtn = document.getElementById('signInBtn');
-    signUpBtn.addEventListener('click', async () => { document.getElementById('clickHint').textContent = 'Отправляем запрос в Supabase…'; await signUp(); });
-    signInBtn.addEventListener('click', async () => { document.getElementById('clickHint').textContent = 'Пробуем войти…'; await signIn(); });
+    async function boot() {
+      try {
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        state.session = data?.session || null;
+        state.user = data?.session?.user || null;
+        if (state.user) {
+          await startApp();
+        } else {
+          authScreen.classList.add('open');
+        }
+      } catch (e) {
+        authScreen.classList.add('open');
+        showNotice(authNotice, 'Не удалось восстановить сессию. Попробуй войти снова.', true);
+      }
+    }
+
+    document.getElementById('signUpBtn').addEventListener('click', signUp);
+    document.getElementById('signInBtn').addEventListener('click', signIn);
     logoutBtn.addEventListener('click', logout);
     document.getElementById('themeToggle').onclick = () => {
       document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     };
     document.querySelectorAll('.nav-item').forEach(item => item.onclick = () => switchView(item.dataset.target));
-    openTaskSheetBtn.onclick = () => taskSheet.classList.add('open');
+    openTaskSheetBtn.onclick = () => { resetTaskForm(); taskSheet.classList.add('open'); };
     document.getElementById('closeTaskSheet').onclick = () => taskSheet.classList.remove('open');
     document.getElementById('saveTaskBtn').onclick = saveTask;
     document.getElementById('saveTaskLater').onclick = saveTask;
@@ -812,29 +842,27 @@
     document.getElementById('quickToCalendar').onclick = () => switchView('calendar');
     document.getElementById('prevMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); };
     document.getElementById('nextMonthBtn').onclick = () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); };
-  const selected =
-    state.selectedCalendarDate ||
-    new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1)
-      .toISOString()
-      .slice(0, 10);
+    document.getElementById('calendarJumpToday').onclick = () => {
+      state.calendarDate = new Date();
+      state.selectedCalendarDate = new Date().toISOString().slice(0,10);
+      renderCalendar();
+    };
 
-  taskSheet.classList.add('open');
-  clearNotice(document.getElementById('taskNotice'));
-  document.getElementById('taskTitle').value = '';
-  document.getElementById('taskDeadline').value = '';
-  document.getElementById('taskSection').value = '';
-  document.getElementById('taskRepeat').value = 'none';
-  document.getElementById('taskPlannedDate').value = selected;
-  document.getElementById('taskPlannedTime').value = '';
-  document.getElementById('taskNote').value = '';
-};
-    supabaseClient.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        state.session = data.session;
-        state.user = data.session.user;
-        startApp();
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      state.session = session || null;
+      state.user = session?.user || null;
+      if (state.user) {
+        await startApp();
+      } else {
+        authScreen.classList.add('open');
+        appContent.classList.add('hidden');
+        bottomNav.classList.add('hidden');
+        openTaskSheetBtn.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
       }
     });
+
+    boot();
   </script>
 </body>
 </html>
