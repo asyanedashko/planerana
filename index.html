@@ -600,21 +600,24 @@ const state = {
 
       const weekdays = ['пн','вт','ср','чт','пт','сб','вс'];
       const firstDay = new Date(year, month, 1);
-      const startOffset = (firstDay.getDay() + 6) % 7;
-      const gridStart = new Date(year, month, 1 - startOffset);
-     const todayLocal = toLocalISODate(new Date());
-const selectedIso = state.selectedCalendarDate || todayLocal;
-      const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
+const startOffset = (firstDay.getDay() + 6) % 7;
+const gridStart = new Date(year, month, 1 - startOffset);
 
-      let cells = '';
-      for (let i = 0; i < 42; i++) {
-        const d = new Date(gridStart);
-        d.setDate(gridStart.getDate() + i);
-        const iso = d.toISOString().slice(0,10);
-        const tasksForDay = monthTasks.filter(t => t.planned_date === iso);
-        const outside = d.getMonth() !== month;
-        const isToday = iso === todayIso;
-        const isSelected = iso === selectedIso;
+const todayIso = toLocalISODate(new Date());
+const selectedIso = state.selectedCalendarDate || todayIso;
+const monthTasks = state.tasks.filter(t => !t.completed && t.planned_date);
+
+let cells = '';
+for (let i = 0; i < 42; i++) {
+  const d = new Date(gridStart);
+  d.setDate(gridStart.getDate() + i);
+  const iso = d.toISOString().slice(0,10);
+  const tasksForDay = monthTasks.filter(t => t.planned_date === iso);
+  const outside = d.getMonth() !== month;
+  const isToday = iso === todayIso;
+  const isSelected = iso === selectedIso;
+  ...
+}
         cells += `
           <button type="button" class="day-cell ${outside ? 'outside' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" data-date="${iso}">
             <span class="day-num">${d.getDate()}</span>
